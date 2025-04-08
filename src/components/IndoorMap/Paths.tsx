@@ -13,15 +13,29 @@ function Paths({ floor }: { floor: number }) {
         let imported;
         switch (floor) {
           case 1:
-            imported = await import("../../floors/floor1/graphData");
+            imported = await import("floors/floor1/graphData");
             break;
           case 2:
-            imported = await import("../../floors/floor2/graphData");
+            imported = await import("floors/floor2/graphData");
+            break;
+          case 3:
+            imported = await import("floors/floor3/graphData");
+            break;
+          case 4:
+            imported = await import("floors/floor4/graphData");
+            break;
+          case 5:
+            imported = await import("floors/floor5/graphData");
+            break;
+          case 6:
+            imported = await import("floors/floor6/graphData");
+            break;
+          case 7:
+            imported = await import("floors/floor7/graphData");
             break;
           default:
-            imported = { graphData: { vertices: [], edges: [] } };
+            imported = { default: { vertices: [], edges: [] } };
         }
-        setGraphData(imported.graphData);
       } catch (err) {
         console.error("Failed to load graph data:", err);
         setGraphData({ vertices: [], edges: [] });

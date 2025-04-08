@@ -23,6 +23,26 @@ function Objects({ floor, handleObjectClick, className }: ObjectsProps) {
                         imported = await import("floors/floor2/Objects");
                         setObjects(imported.default);
                         break;
+                    case 3:
+                        imported = await import("floors/floor3/Objects");
+                        setObjects(imported.default);
+                        break;
+                    case 4:
+                        imported = await import("floors/floor4/Objects");
+                        setObjects(imported.default);
+                        break;
+                    case 5:
+                        imported = await import("floors/floor5/Objects");
+                        setObjects(imported.default);
+                        break;
+                    case 6:
+                        imported = await import("floors/floor6/Objects");
+                        setObjects(imported.default);
+                        break;
+                    case 7:
+                        imported = await import("floors/floor7/Objects");
+                        setObjects(imported.default);
+                        break;
 
                     default:
                         setObjects([]);
