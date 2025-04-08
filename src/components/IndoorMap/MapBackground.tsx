@@ -6,7 +6,7 @@ interface MapBackgroundProps {
 }
 
 function MapBackground({ children, floor }: MapBackgroundProps) {
-  const mapPath = `floors/${floor}/map.svg`;
+  const mapPath = `/floors/floor${floor}/map.svg`;
 
   return (
     <svg

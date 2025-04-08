@@ -19,6 +19,7 @@ export interface Beacon {
 export interface Navigation {
   start: string;
   end?: string;
+  floor: number;
 }
 
 export interface NavigationContextType {

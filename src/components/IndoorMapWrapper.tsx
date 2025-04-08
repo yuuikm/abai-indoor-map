@@ -12,7 +12,6 @@ import MapBackground from "components/IndoorMap/MapBackground";
 import Paths from "components/IndoorMap/Paths";
 import Positions from "components/IndoorMap/Positions";
 import Objects from "components/IndoorMap/Objects";
-
 import Controls from "components/MapControls";
 import ObjectDetailsModal from "components/Modals/ObjectDetailsModal";
 import { navigateToObject } from "utils/navigationHelper";
@@ -22,10 +21,14 @@ function IndoorMapWrapper() {
   const [modalOpen, setModalOpen] = useState(false);
   const [object, setObject] = useState<ObjectItem>({} as ObjectItem);
   const positionRadius = isMobile ? 10 : 8;
+
   const { navigation, setNavigation, isEditMode, setIsEditMode } = useContext(
     NavigationContext
   ) as NavigationContextType;
   const { objects } = useContext(MapDataContext) as MapDataContextType;
+
+  const floor = navigation.floor;
+
   async function handleObjectClick(e: React.MouseEvent<SVGPathElement>) {
     if (!isEditMode) {
       const targetId = (e.target as HTMLElement).id;
@@ -38,18 +41,20 @@ function IndoorMapWrapper() {
       }
     }
   }
-  const handlePositionClick = (e: React.MouseEvent<SVGPathElement>) => {
+
+  const handlePositionClick = (e: React.MouseEvent<SVGCircleElement>) => {
     if (isEditMode) {
       const vertexId = (e.target as HTMLElement).id;
-      setNavigation({ start: vertexId });
+      setNavigation({ ...navigation, start: vertexId });
       setIsEditMode(false);
     }
   };
 
   function handleNavigationClick() {
     setModalOpen(false);
-    navigateToObject(object.name, navigation, setNavigation);
+    navigateToObject(object.name, navigation, setNavigation, floor);
   }
+
   return (
     <div className="relative w-full h-full bg-white center">
       <ObjectDetailsModal
@@ -68,23 +73,22 @@ function IndoorMapWrapper() {
         wheel={{ smoothStep: 0.01 }}
       >
         <TransformComponent wrapperClass="bg-white">
-          <MapBackground>
-            {/*Objects are the clickable areas on the map e.g. Rooms, Desks, ...*/}
+          <MapBackground floor={floor}>
             <Objects
+              floor={floor}
               handleObjectClick={handleObjectClick}
               className={
                 isEditMode ? "" : "hover:cursor-pointer hover:opacity-50"
               }
             />
-            {/*Edges are the lines on the map aka the paths*/}
-            <Paths />
-            {/*Vertexes are the circles on the map aka the positions*/}
+            <Paths floor={floor} />
             <Positions
+              floor={floor}
               positionRadius={positionRadius}
               handlePositionClick={handlePositionClick}
               className={
                 isEditMode
-                  ? "opacity-100 cursor-pointer hover:fill-[#488af4] "
+                  ? "opacity-100 cursor-pointer hover:fill-[#488af4]"
                   : "opacity-0"
               }
               navigation={navigation}
@@ -96,4 +100,5 @@ function IndoorMapWrapper() {
     </div>
   );
 }
+
 export default IndoorMapWrapper;

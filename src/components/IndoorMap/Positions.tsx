@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { GraphData, NavigationContextType } from "utils/types";
 
 interface PositionsProps {
@@ -16,19 +16,37 @@ function Positions({
                      className,
                      navigation,
                    }: PositionsProps) {
+  const [graphData, setGraphData] = useState<GraphData>({
+    vertices: [],
+    edges: [],
+  });
+
   const positionBackgroundColor = "#4285f4";
   const positionBackgroundRadius = positionRadius + 7;
   const positonBackgroundOpacity = 0.2;
 
-  const graphData: GraphData = useMemo(() => {
-    switch (floor) {
-      case 1:
-        return require("@/floors/floor1/graphData").graphData;
-      case 2:
-        return require("@/floors/floor2/graphData").graphData;
-      default:
-        return { vertices: [], edges: [] };
+  useEffect(() => {
+    async function loadGraph() {
+      try {
+        let imported;
+        switch (floor) {
+          case 1:
+            imported = await import("../../floors/floor1/graphData");
+            break;
+          case 2:
+            imported = await import("../../floors/floor2/graphData");
+            break;
+          default:
+            imported = { graphData: { vertices: [], edges: [] } };
+        }
+        setGraphData(imported.graphData);
+      } catch (err) {
+        console.error("Failed to load graph data:", err);
+        setGraphData({ vertices: [], edges: [] });
+      }
     }
+
+    loadGraph();
   }, [floor]);
 
   const startVertex = graphData.vertices.find(
@@ -41,7 +59,6 @@ function Positions({
 
   return (
     <g id="Vertexes">
-      {/* Background circle for Google Maps like look */}
       {startVertex && (
         <circle
           id="background-circle"
@@ -57,9 +74,7 @@ function Positions({
         <circle
           key={vertex.id}
           id={vertex.id}
-          onClick={
-            vertex.objectName ? undefined : handlePositionClick
-          }
+          onClick={vertex.objectName ? undefined : handlePositionClick}
           className={`position ${vertex.objectName ? "opacity-0" : className} ${
             isActivePosition(vertex.id) ? "position-active opacity-100" : ""
           }`}
@@ -69,7 +84,6 @@ function Positions({
         />
       ))}
 
-      {/* Circle animation */}
       {startVertex && (
         <circle
           id="circle-animation"

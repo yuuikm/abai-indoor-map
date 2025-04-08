@@ -68,7 +68,6 @@ function ObjectEditView({
         </div>
       </DialogHeader>
       <DialogBody>
-        {/* Object name is disabled because it should not be changed, it's used as an identifier in this code */}
         <input
           type="text"
           className="w-full mb-2 p-2 rounded text-black"

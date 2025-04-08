@@ -24,7 +24,6 @@ function ObjectItemDetailsModal({
   object,
   objectNavigation,
 }: ObjectItemDetailsModalProps) {
-  //TODO: Refactor this mess
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedCategoryId, setEditedCategoryId] = useState("");
   const [editedObjectName, setEditedObjectName] = useState("");

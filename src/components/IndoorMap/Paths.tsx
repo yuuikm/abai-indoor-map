@@ -1,34 +1,51 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { GraphData } from "utils/types";
 
-interface PathsProps {
-  floor: number;
-}
+function Paths({ floor }: { floor: number }) {
+  const [graphData, setGraphData] = useState<GraphData>({
+    vertices: [],
+    edges: [],
+  });
 
-function Paths({ floor }: PathsProps) {
-  const graphData: GraphData = useMemo(() => {
-    switch (floor) {
-      case 1:
-        return require("@/floors/floor1/graphData").graphData;
-      case 2:
-        return require("@/floors/floor2/graphData").graphData;
-      default:
-        return { vertices: [], edges: [] };
+  useEffect(() => {
+    async function loadGraph() {
+      try {
+        let imported;
+        switch (floor) {
+          case 1:
+            imported = await import("../../floors/floor1/graphData");
+            break;
+          case 2:
+            imported = await import("../../floors/floor2/graphData");
+            break;
+          default:
+            imported = { graphData: { vertices: [], edges: [] } };
+        }
+        setGraphData(imported.graphData);
+      } catch (err) {
+        console.error("Failed to load graph data:", err);
+        setGraphData({ vertices: [], edges: [] });
+      }
     }
+
+    loadGraph();
   }, [floor]);
 
   return (
     <g id="Edges">
       {graphData.edges.map((edge) => {
-        const { id, from, to } = edge;
-        const fromVertex = graphData.vertices.find((v) => v.id === from);
-        const toVertex = graphData.vertices.find((v) => v.id === to);
-        if (fromVertex && toVertex) {
-          const pathClassName = "path";
-          const pathD = `M${fromVertex.cx} ${fromVertex.cy}L${toVertex.cx} ${toVertex.cy}`;
-          return <path key={id} id={id} className={pathClassName} d={pathD} />;
-        }
-        return null;
+        const from = graphData.vertices.find((v) => v.id === edge.from);
+        const to = graphData.vertices.find((v) => v.id === edge.to);
+        if (!from || !to) return null;
+
+        return (
+          <path
+            key={edge.id}
+            id={edge.id}
+            className="path"
+            d={`M${from.cx} ${from.cy}L${to.cx} ${to.cy}`}
+          />
+        );
       })}
       <path id="navigation-route" className="path" d="" fill="none" />
     </g>
