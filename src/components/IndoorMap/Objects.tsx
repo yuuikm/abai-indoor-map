@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { FloorObject } from "utils/types";
 
 interface ObjectsProps {
@@ -8,15 +8,32 @@ interface ObjectsProps {
 }
 
 function Objects({ floor, handleObjectClick, className }: ObjectsProps) {
-    const objects: FloorObject[] = useMemo(() => {
-        switch (floor) {
-            case 1:
-                return require("floors/floor1/Objects").floor1Objects;
-            case 2:
-                return require("floors/floor2/Objects").floor2Objects;
-            default:
-                return [];
+    const [objects, setObjects] = useState<FloorObject[]>([]);
+
+    useEffect(() => {
+        async function loadObjects() {
+            try {
+                let imported;
+                switch (floor) {
+                    case 1:
+                        imported = await import("floors/floor1/Objects");
+                        setObjects(imported.default);
+                        break;
+                    case 2:
+                        imported = await import("floors/floor2/Objects");
+                        setObjects(imported.default);
+                        break;
+
+                    default:
+                        setObjects([]);
+                }
+            } catch (err) {
+                console.error("Failed to load floor objects:", err);
+                setObjects([]);
+            }
         }
+
+        loadObjects();
     }, [floor]);
 
     return (

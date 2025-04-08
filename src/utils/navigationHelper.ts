@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 export let routeLength = 0;
 
-// Возвращает graphData по этажу
 function getGraphData(floor: number): GraphData {
   switch (floor) {
     case 1:
@@ -19,11 +18,9 @@ function getGraphData(floor: number): GraphData {
   }
 }
 
-// Поиск вершины по objectName
 const findVertexByObjectId = (graphData: GraphData, objectId: string) =>
   graphData.vertices.find((v) => v.objectName === objectId);
 
-// Построение маршрута и анимация
 export function navigateToObject(
   selectedObjectId: string,
   navigation: NavigationContextType["navigation"],
@@ -79,7 +76,6 @@ export function navigateToObject(
   }));
 }
 
-// Очистка анимации маршрута
 export function resetEdges(floor: number) {
   const graphData = getGraphData(floor);
   document.getElementById("navigation-route")?.setAttribute("d", "");
@@ -92,7 +88,6 @@ export function resetEdges(floor: number) {
   });
 }
 
-// Пошаговая навигация по массиву объектов
 export function navigateWithDelay(
   objects: ObjectItem[],
   index: number,

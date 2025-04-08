@@ -1,4 +1,3 @@
-// useMapData.ts
 import { useState, useEffect } from "react";
 import { getObjects, getCategories } from "services/mapServices";
 import { Category, ObjectItem } from "utils/types";
@@ -11,7 +10,6 @@ function useMapData() {
     try {
       const objectsData = await getObjects();
       const categoriesData = await getCategories();
-      // Add categoryName to each object
       objectsData.forEach((obj) => {
         obj.categoryName = categoriesData.find(
           (cat) => cat.id === obj.categoryId

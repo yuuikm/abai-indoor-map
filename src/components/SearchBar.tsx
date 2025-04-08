@@ -118,7 +118,6 @@ function SearchBar() {
       (obj) => obj.name.toLowerCase() === inputValue.trim().toLowerCase()
     );
     if (!matchingObject) {
-      //? To test the navigation feature
       if (inputValue === "Test") {
         const delay = 500;
         navigationTestAll(objects, 0, delay, navigation, setNavigation);
