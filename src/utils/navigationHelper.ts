@@ -1,20 +1,39 @@
 import { Dispatch, SetStateAction } from "react";
-import { graph } from "../algorithms/dijkstra";
-import { Navigation, NavigationContextType } from "utils/types";
-import { ObjectItem } from "utils/types";
-import { graphData } from "store/graphData";
+import { buildGraphFromData } from "algorithms/dijkstra";
+import { Navigation, NavigationContextType, ObjectItem, GraphData } from "utils/types";
+import { graphData as graphData1 } from "floors/floor1/graphData";
+import { graphData as graphData2 } from "floors/floor2/graphData";
 import { toast } from "react-toastify";
+
 export let routeLength = 0;
 
-const findVertexByObjectId = (vertexId: string) =>
-  graphData.vertices.find((v) => v.objectName === vertexId);
+// Возвращает graphData по этажу
+function getGraphData(floor: number): GraphData {
+  switch (floor) {
+    case 1:
+      return graphData1;
+    case 2:
+      return graphData2;
+    default:
+      return { vertices: [], edges: [] };
+  }
+}
 
+// Поиск вершины по objectName
+const findVertexByObjectId = (graphData: GraphData, objectId: string) =>
+  graphData.vertices.find((v) => v.objectName === objectId);
+
+// Построение маршрута и анимация
 export function navigateToObject(
   selectedObjectId: string,
   navigation: NavigationContextType["navigation"],
-  setNavigation: NavigationContextType["setNavigation"]
+  setNavigation: NavigationContextType["setNavigation"],
+  floor: number
 ) {
-  const target = findVertexByObjectId(selectedObjectId);
+  const graphData = getGraphData(floor);
+  const graph = buildGraphFromData(graphData);
+
+  const target = findVertexByObjectId(graphData, selectedObjectId);
   if (!target) {
     console.error("Target not found");
     toast.error("Target not found");
@@ -22,6 +41,8 @@ export function navigateToObject(
   }
 
   const shortestPath = graph.calculateShortestPath(navigation.start, target.id);
+  routeLength = shortestPath.length;
+
   const pathString = shortestPath
     .slice(1)
     .map((vertexId) => {
@@ -32,14 +53,16 @@ export function navigateToObject(
 
   const startVertex = graphData.vertices.find((v) => v.id === navigation.start);
   const navigationRoutePath = document.getElementById("navigation-route");
+
   if (navigationRoutePath && startVertex) {
     navigationRoutePath.setAttribute(
       "d",
       `M${startVertex.cx} ${startVertex.cy} ${pathString}`
     );
-    console.log("navigationRoutePath", navigationRoutePath);
+
     navigationRoutePath.classList.remove("path-once", "path-active");
     navigationRoutePath.classList.add("path-once");
+
     navigationRoutePath.addEventListener(
       "animationend",
       () => {
@@ -50,14 +73,17 @@ export function navigateToObject(
     );
   }
 
-  setNavigation((prevNavigation) => ({
-    ...prevNavigation,
+  setNavigation((prev) => ({
+    ...prev,
     end: selectedObjectId,
   }));
 }
 
-export function resetEdges() {
+// Очистка анимации маршрута
+export function resetEdges(floor: number) {
+  const graphData = getGraphData(floor);
   document.getElementById("navigation-route")?.setAttribute("d", "");
+
   graphData.edges.forEach((edge) => {
     const element = document.getElementById(edge.id);
     if (element) {
@@ -66,19 +92,21 @@ export function resetEdges() {
   });
 }
 
+// Пошаговая навигация по массиву объектов
 export function navigateWithDelay(
   objects: ObjectItem[],
   index: number,
   delay: number,
   navigation: Navigation,
-  setNavigation: Dispatch<SetStateAction<Navigation>>
+  setNavigation: Dispatch<SetStateAction<Navigation>>,
+  floor: number
 ) {
   if (index < objects.length) {
     const obj = objects[index];
-    navigateToObject(obj.name, navigation, setNavigation);
+    navigateToObject(obj.name, navigation, setNavigation, floor);
 
     setTimeout(() => {
-      navigateWithDelay(objects, index + 1, delay, navigation, setNavigation);
+      navigateWithDelay(objects, index + 1, delay, navigation, setNavigation, floor);
     }, delay);
   }
 }

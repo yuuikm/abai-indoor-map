@@ -1,13 +1,12 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import path from "node:path";
 
 // https://vitejs.dev/config/
 
 export default defineConfig(({ mode }) => {
   return {
-    plugins: [react(), ViteImageOptimizer({})],
+    plugins: [react()],
     resolve: {
       alias: {
         algorithms: path.resolve(__dirname, 'src/algorithms'),
@@ -19,6 +18,7 @@ export default defineConfig(({ mode }) => {
         store: path.resolve(__dirname, 'src/store'),
         styles: path.resolve(__dirname, 'src/styles'),
         utils: path.resolve(__dirname, 'src/utils'),
+        floors: path.resolve(__dirname, 'src/floors'),
       },
     },
     base: './',

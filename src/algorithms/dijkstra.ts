@@ -1,19 +1,10 @@
-import { graphData, VertexData } from "store/graphData";
+import { GraphData, VertexData } from "utils/types";
 
-type NodeId = string;
-interface Node {
-  id: NodeId;
-  priority: number;
-}
 class PriorityQueue {
-  values: Node[];
+  values: { id: string; priority: number }[] = [];
 
-  constructor() {
-    this.values = [];
-  }
-
-  enqueue(id: NodeId, priority: number) {
-    const newNode: Node = { id, priority };
+  enqueue(id: string, priority: number) {
+    const newNode = { id, priority };
     this.values.push(newNode);
     this.bubbleUp();
   }
@@ -30,6 +21,7 @@ class PriorityQueue {
       idx = parentIdx;
     }
   }
+
   dequeue() {
     const min = this.values[0];
     const end = this.values.pop();
@@ -39,34 +31,29 @@ class PriorityQueue {
     }
     return min;
   }
+
   sinkDown() {
     let idx = 0;
     const length = this.values.length;
     const element = this.values[0];
-    // eslint-disable-next-line no-constant-condition
     while (true) {
-      const leftChildIdx = 2 * idx + 1;
-      const rightChildIdx = 2 * idx + 2;
-      let leftChild, rightChild;
-      let swap = null;
+      const leftIdx = 2 * idx + 1;
+      const rightIdx = 2 * idx + 2;
+      let swap: number | null = null;
 
-      if (leftChildIdx < length) {
-        leftChild = this.values[leftChildIdx];
-        if (leftChild.priority < element.priority) {
-          swap = leftChildIdx;
+      if (leftIdx < length) {
+        if (this.values[leftIdx].priority < element.priority) {
+          swap = leftIdx;
         }
       }
-      if (rightChildIdx < length) {
-        rightChild = this.values[rightChildIdx];
-        if (
-          (swap === null && rightChild.priority < element.priority) ||
-          (swap !== null &&
-            leftChild &&
-            rightChild.priority < leftChild.priority)
-        ) {
-          swap = rightChildIdx;
-        }
+
+      if (
+        rightIdx < length &&
+        this.values[rightIdx].priority < (swap === null ? element.priority : this.values[leftIdx].priority)
+      ) {
+        swap = rightIdx;
       }
+
       if (swap === null) break;
       this.values[idx] = this.values[swap];
       this.values[swap] = element;
@@ -76,107 +63,75 @@ class PriorityQueue {
 }
 
 class DijkstraCalculator {
-  adjacencyList: { [key: NodeId]: { id: NodeId; weight: number }[] };
+  adjacencyList: Record<string, { id: string; weight: number }[]> = {};
 
-  constructor() {
-    this.adjacencyList = {};
+  addVertex(vertex: string) {
+    if (!this.adjacencyList[vertex]) {
+      this.adjacencyList[vertex] = [];
+    }
   }
 
-  addVertex(vertex: NodeId) {
-    if (!this.adjacencyList[vertex]) this.adjacencyList[vertex] = [];
+  addEdge(from: string, to: string, weight = 1) {
+    this.adjacencyList[from].push({ id: to, weight });
+    this.adjacencyList[to].push({ id: from, weight });
   }
 
-  addEdge(vertex1: NodeId, vertex2: NodeId, weight = 1) {
-    this.adjacencyList[vertex1].push({ id: vertex2, weight });
-    this.adjacencyList[vertex2].push({ id: vertex1, weight });
-  }
-  // Example: Calculate shortest path from v1 to v5
-  //console.log(graph.calculateShortestPath("v1","v5")); // ["v1", "v3", "v4", "v5"]
-  calculateShortestPath(start: NodeId, finish: NodeId) {
+  calculateShortestPath(start: string, end: string): string[] {
     const nodes = new PriorityQueue();
-    const distances: { [key: NodeId]: number } = {};
-    const previous: { [key: NodeId]: NodeId } = {};
-    const path = []; //to return at end
-    let smallest: string | null = null;
-    //build up initial state
+    const distances: Record<string, number> = {};
+    const previous: Record<string, string | null> = {};
+    const path: string[] = [];
+
     for (const vertex in this.adjacencyList) {
-      if (vertex === start) {
-        distances[vertex] = 0;
-        nodes.enqueue(vertex, 0);
-      } else {
-        distances[vertex] = Infinity;
-        nodes.enqueue(vertex, Infinity);
-      }
-      delete previous[vertex];
+      distances[vertex] = vertex === start ? 0 : Infinity;
+      nodes.enqueue(vertex, distances[vertex]);
+      previous[vertex] = null;
     }
-    // as long as there is something to visit
+
     while (nodes.values.length) {
-      smallest = nodes.dequeue().id;
-      if (smallest === finish) {
-        //WE ARE DONE
-        //BUILD UP PATH TO RETURN AT END
-        while (smallest && previous[smallest]) {
-          path.push(smallest);
-          smallest = previous[smallest];
+      const smallest = nodes.dequeue().id;
+
+      if (smallest === end) {
+        let curr = end;
+        while (previous[curr]) {
+          path.push(curr);
+          curr = previous[curr]!;
         }
-        break;
+        path.push(start);
+        return path.reverse();
       }
-      if (smallest || distances[smallest] !== Infinity) {
-        for (const neighbor in this.adjacencyList[smallest]) {
-          //find neighboring node
-          const nextNode = this.adjacencyList[smallest][neighbor];
-          //calculate new distance to neighboring node
-          const candidate = distances[smallest] + nextNode.weight;
-          const nextNeighbor = nextNode.id;
-          if (candidate < distances[nextNeighbor]) {
-            //updating new smallest distance to neighbor
-            distances[nextNeighbor] = candidate;
-            //updating previous - How we got to neighbor
-            previous[nextNeighbor] = smallest;
-            //enqueue in priority queue with new priority
-            nodes.enqueue(nextNeighbor, candidate);
-          }
+
+      for (const neighbor of this.adjacencyList[smallest]) {
+        const candidate = distances[smallest] + neighbor.weight;
+        if (candidate < distances[neighbor.id]) {
+          distances[neighbor.id] = candidate;
+          previous[neighbor.id] = smallest;
+          nodes.enqueue(neighbor.id, candidate);
         }
       }
     }
 
-    let finalPath: string[] = [];
-    if (!smallest) {
-      finalPath = path.reverse();
-    } else {
-      finalPath = path.concat(smallest).reverse();
-    }
-
-    if (finalPath.length <= 1) {
-      // if the final path has only 1 or fewer elements, there was no traversal that was possible.
-      return [];
-    }
-
-    return finalPath;
+    return [];
   }
 }
 
-export const graph = new DijkstraCalculator();
-
-graphData.vertices.forEach((vertex) => {
-  graph.addVertex(vertex.id);
-});
-
-graphData.edges.forEach((edge) => {
-  //console.log(edge.from, edge.to);
-  const { from, to } = edge;
-  const fromVertex = graphData.vertices.find((vertex) => vertex.id === from);
-  const toVertex = graphData.vertices.find((vertex) => vertex.id === to);
-
-  if (fromVertex && toVertex) {
-    //add the distance between the two vertices as the weight of the edge
-    const length = calculateDistance(fromVertex, toVertex);
-    graph.addEdge(from, to, length);
-  }
-});
-
-function calculateDistance(vertex1: VertexData, vertex2: VertexData) {
-  const dx = vertex2.cx - vertex1.cx;
-  const dy = vertex2.cy - vertex1.cy;
+function calculateDistance(v1: VertexData, v2: VertexData) {
+  const dx = v2.cx - v1.cx;
+  const dy = v2.cy - v1.cy;
   return Math.sqrt(dx * dx + dy * dy);
+}
+
+export function buildGraphFromData(graphData: GraphData): DijkstraCalculator {
+  const graph = new DijkstraCalculator();
+
+  graphData.vertices.forEach((v) => graph.addVertex(v.id));
+  graphData.edges.forEach((edge) => {
+    const fromV = graphData.vertices.find((v) => v.id === edge.from);
+    const toV = graphData.vertices.find((v) => v.id === edge.to);
+    if (fromV && toV) {
+      graph.addEdge(edge.from, edge.to, calculateDistance(fromV, toV));
+    }
+  });
+
+  return graph;
 }

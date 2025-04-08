@@ -1,14 +1,28 @@
-import { graphData } from "store/graphData";
+import { useMemo } from "react";
+import { GraphData } from "utils/types";
 
-function Paths() {
+interface PathsProps {
+  floor: number;
+}
+
+function Paths({ floor }: PathsProps) {
+  const graphData: GraphData = useMemo(() => {
+    switch (floor) {
+      case 1:
+        return require("@/floors/floor1/graphData").graphData;
+      case 2:
+        return require("@/floors/floor2/graphData").graphData;
+      default:
+        return { vertices: [], edges: [] };
+    }
+  }, [floor]);
+
   return (
     <g id="Edges">
       {graphData.edges.map((edge) => {
         const { id, from, to } = edge;
-        const fromVertex = graphData.vertices.find(
-          (vertex) => vertex.id === from
-        );
-        const toVertex = graphData.vertices.find((vertex) => vertex.id === to);
+        const fromVertex = graphData.vertices.find((v) => v.id === from);
+        const toVertex = graphData.vertices.find((v) => v.id === to);
         if (fromVertex && toVertex) {
           const pathClassName = "path";
           const pathD = `M${fromVertex.cx} ${fromVertex.cy}L${toVertex.cx} ${toVertex.cy}`;
