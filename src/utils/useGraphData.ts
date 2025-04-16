@@ -34,6 +34,7 @@ export default function useGraphData(floor: number): GraphData {
             imported = { graphData: { vertices: [], edges: [] } };
         }
 
+        // @ts-ignore
         setGraphData(imported.graphData || imported.default);
       } catch (err) {
         console.error("Failed to load graph data for floor", floor, err);

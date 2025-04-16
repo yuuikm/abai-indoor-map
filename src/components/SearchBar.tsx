@@ -1,12 +1,10 @@
 import Tooltip from "components/ui/Tooltip";
 import {
   navigateToObject,
-  navigateWithDelay as navigationTestAll,
   resetEdges,
 } from "utils/navigationHelper";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FiCircle, FiNavigation } from "react-icons/fi";
-import { useOnClickOutside } from "usehooks-ts";
 import { MapDataContext, NavigationContext } from "pages/Map";
 import {
   MapDataContextType,
