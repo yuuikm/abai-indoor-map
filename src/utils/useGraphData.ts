@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GraphData } from "utils/types";
 
-function Paths({ floor }: { floor: number }) {
+export default function useGraphData(floor: number): GraphData {
   const [graphData, setGraphData] = useState<GraphData>({
     vertices: [],
     edges: [],
@@ -31,10 +31,12 @@ function Paths({ floor }: { floor: number }) {
             imported = await import("floors/floor6/graphData");
             break;
           default:
-            imported = { default: { vertices: [], edges: [] } };
+            imported = { graphData: { vertices: [], edges: [] } };
         }
+
+        setGraphData(imported.graphData || imported.default);
       } catch (err) {
-        console.error("Failed to load graph data:", err);
+        console.error("Failed to load graph data for floor", floor, err);
         setGraphData({ vertices: [], edges: [] });
       }
     }
@@ -42,25 +44,5 @@ function Paths({ floor }: { floor: number }) {
     loadGraph();
   }, [floor]);
 
-  return (
-    <g id="Edges">
-      {graphData.edges.map((edge) => {
-        const from = graphData.vertices.find((v) => v.id === edge.from);
-        const to = graphData.vertices.find((v) => v.id === edge.to);
-        if (!from || !to) return null;
-
-        return (
-          <path
-            key={edge.id}
-            id={edge.id}
-            className="path"
-            d={`M${from.cx} ${from.cy}L${to.cx} ${to.cy}`}
-          />
-        );
-      })}
-      <path id="navigation-route" className="path" d="" fill="none" />
-    </g>
-  );
+  return graphData;
 }
-
-export default Paths;

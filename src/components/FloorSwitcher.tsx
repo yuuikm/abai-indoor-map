@@ -14,11 +14,10 @@ function FloorSwitcher() {
   const defaultPositionsByFloor: Record<number, string> = {
     1: "v35",
     2: "v19",
-    3: "v5",
-    4: "v10",
-    5: "v25",
-    6: "v42",
-    7: "v60",
+    3: "v20",
+    4: "v21",
+    5: "v22",
+    6: "v23",
   };
 
   const handleFloorChange = (newFloor: number) => {
@@ -35,7 +34,7 @@ function FloorSwitcher() {
     navigate(`/${newFloor}?position=${defaultStart}`);
   };
 
-  const floors = [1, 2, 3, 4, 5, 6, 7];
+  const floors = [1, 2, 3, 4, 5, 6];
 
   return (
     <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg">

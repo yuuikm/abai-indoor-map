@@ -18,10 +18,10 @@ export const graphData: GraphData = {
   vertices: [
     { id: "v1", objectName: null, cx: 361.105, cy: 512.811 },
     { id: "v2", objectName: null, cx: 237.691, cy: 512.811 },
-    { id: "v3", objectName: "Zara", cx: 237.691, cy: 905.781 },
+    { id: "v3", objectName: "Zara 5", cx: 237.691, cy: 905.781 },
     { id: "v4", objectName: "McShark", cx: 361.105, cy: 905.781 },
     { id: "v5", objectName: "Nike", cx: 490.616, cy: 905.781 },
-    { id: "v6", objectName: "Adidas", cx: 622.812, cy: 905.781 },
+    { id: "v6", objectName: "Adidas 5", cx: 622.812, cy: 905.781 },
     { id: "v7", objectName: "Primark", cx: 754.244, cy: 905.781 },
     { id: "v8", objectName: "Svarovski", cx: 889.316, cy: 905.781 },
     { id: "v9", objectName: "H&M", cx: 1020.234, cy: 905.781 },
