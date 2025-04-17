@@ -1,41 +1,33 @@
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, createContext } from "react";
+import { isDesktop, isMobile } from "react-device-detect";
+import Toolbar from "components/Toolbar";
+import Sidebar from "components/Sidebar";
 import IndoorMapWrapper from "components/IndoorMapWrapper";
 import MobileRouteDetails from "components/MobileRouteDetails";
-import Toolbar from "components/Toolbar";
 import useMapData from "hooks/useMapData";
-import { createContext, useEffect, useState } from "react";
-import { isDesktop, isMobile } from "react-device-detect";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import {
   MapDataContextType,
   Navigation,
   NavigationContextType,
 } from "utils/types";
-import Sidebar from "components/Sidebar";
+import { defaultPositionsByFloor } from "utils/floorDefaults";
+import useGraphData from "utils/useGraphData";
 
 export const NavigationContext = createContext<NavigationContextType | null>(null);
 export const MapDataContext = createContext<MapDataContextType | null>(null);
 
-const defaultPositionsByFloor: Record<number, string> = {
-  1: "v35",
-  2: "v19",
-  3: "v5",
-  4: "v10",
-  5: "v25",
-  6: "v42",
-  7: "v60",
-};
-
 function Map() {
   const navigate = useNavigate();
   const { floorNumber } = useParams<{ floorNumber: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-  const floor = Number(floorNumber) || 1;
+  const floor = Number(floorNumber) || 0;
 
   const [navigation, setNavigation] = useState<Navigation>({
     start: "",
     end: "",
-    floor: floor,
+    floor,
   });
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -48,29 +40,39 @@ function Map() {
   };
 
   const mapData = useMapData();
+  const graphData = useGraphData(floor);
 
   useEffect(() => {
     const positionParam = searchParams.get("position");
     const defaultStart = defaultPositionsByFloor[floor];
-
     const start = positionParam || defaultStart;
 
-    setNavigation({
-      start,
-      end: "",
-      floor,
-    });
+    setNavigation({ start, end: "", floor });
 
     if (floorNumber !== String(floor) || positionParam !== start) {
       navigate(`/${floor}?position=${start}`, { replace: true });
     }
-  }, [floor]);
 
-  useEffect(() => {
-    if (navigation.start) {
-      navigate(`/${navigation.floor}?position=${navigation.start}`, { replace: true });
+    const pending = sessionStorage.getItem("pendingNavigation");
+
+    if (pending) {
+      const { objectName } = JSON.parse(pending);
+
+      const tryNavigate = () => {
+        if (graphData.vertices.length > 0) {
+          sessionStorage.removeItem("pendingNavigation");
+
+          import("utils/navigationHelper").then(({ navigateToObject }) => {
+            navigateToObject(objectName, { start, end: "", floor }, setNavigation, floor);
+          });
+        } else {
+          setTimeout(tryNavigate, 100);
+        }
+      };
+
+      tryNavigate();
     }
-  }, [navigation.start]);
+  }, [floor, graphData]);
 
   return (
     <MapDataContext.Provider value={mapData}>

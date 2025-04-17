@@ -7,8 +7,10 @@ import {
   ObjectItem,
 } from "utils/types";
 import { MapDataContext, NavigationContext } from "pages/Map";
-
-import { navigateToObject } from "utils/navigationHelper";
+import { navigateToObject, resetEdges } from "utils/navigationHelper";
+import useGraphData from "utils/useGraphData";
+import { useNavigate } from "react-router-dom";
+import {defaultPositionsByFloor} from "utils/floorDefaults.ts";
 
 interface ParsedObjects {
   [key: string]: {
@@ -18,12 +20,15 @@ interface ParsedObjects {
 }
 
 function Sidebar() {
+  const navigate = useNavigate();
   const { navigation, setNavigation, setIsEditMode } = useContext(
     NavigationContext
   ) as NavigationContextType;
   const { objects } = useContext(MapDataContext) as MapDataContextType;
   const [parsedObjects, setParsedObjects] = useState<ParsedObjects>({});
-  const [isRotating, setIsRotating] = useState(false);
+
+  const graphData = useGraphData(navigation.floor);
+
   useEffect(() => {
     const groupedObjects = () => {
       const data: ParsedObjects = {};
@@ -47,9 +52,38 @@ function Sidebar() {
     const object = objects.find((obj) => obj.name === selectedObjectName);
     setIsEditMode(false);
     if (!object) return;
-    console.log(object);
-    navigateToObject(object.name, navigation, setNavigation);
+
+    const floorMatch = object.categoryId?.match(/\d+/);
+    const targetFloor = floorMatch ? parseInt(floorMatch[0]) : 0;
+
+    const newStart = defaultPositionsByFloor[targetFloor];
+
+    if (navigation.floor === targetFloor) {
+      if (graphData.vertices.length === 0) {
+        setTimeout(() => handleObjectNavigation(selectedObjectName), 100);
+        return;
+      }
+      navigateToObject(object.name, navigation, setNavigation, targetFloor);
+      return;
+    }
+
+    resetEdges(navigation.floor);
+
+    setNavigation({
+      floor: targetFloor,
+      start: newStart,
+      end: "",
+    });
+
+    sessionStorage.setItem(
+      "pendingNavigation",
+      JSON.stringify({ objectName: selectedObjectName, floor: targetFloor })
+    );
+
+    navigate(`/${targetFloor}?position=${newStart}`);
+
   }
+
 
   return (
     <aside className="flex flex-col rounded-none w-[35rem] h-screen p-3 bg-white shadow-xl shadow-gray-200 -translate-x-full transform transition-transform duration-150 ease-in lg:translate-x-0 lg:shadow-md ">
@@ -59,9 +93,6 @@ function Sidebar() {
             <img
               src={logo}
               alt="PathPal"
-              className={` ${isRotating ? "rotate" : ""}`}
-              onClick={() => setIsRotating(true)}
-              onAnimationEnd={() => setIsRotating(false)}
             />
           </div>
           <div className="flex flex-col">
@@ -85,7 +116,7 @@ function Sidebar() {
                 <h2 className="text-2xl font-bold">
                   {letter}
                   <span className="ml-2 text-sm font-medium text-gray-900">
-                    - {parsedObjects[letter].len}{" "}
+                    - {parsedObjects[letter].len} {" "}
                     {parsedObjects[letter].len === 1 ? "Result" : "Results"}
                   </span>
                 </h2>

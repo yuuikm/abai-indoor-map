@@ -1,4 +1,4 @@
-import { graphData as graphData1 } from "floors/floor1/graphData";
+import { graphData as graphData1 } from "../../src/floors/floor0/graphData";
 import { graphData as graphData2 } from "floors/floor2/graphData";
 
 import { GraphData } from "utils/types";

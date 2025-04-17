@@ -1,35 +1,7 @@
-import { useEffect, useState } from "react";
-import { GraphData } from "utils/types";
+import useGraphData from "utils/useGraphData";
 
 function Paths({ floor }: { floor: number }) {
-  const [graphData, setGraphData] = useState<GraphData>({
-    vertices: [],
-    edges: [],
-  });
-
-  useEffect(() => {
-    async function loadGraph() {
-      try {
-        let imported;
-        switch (floor) {
-          case 1:
-            imported = await import("../../floors/floor1/graphData");
-            break;
-          case 2:
-            imported = await import("../../floors/floor2/graphData");
-            break;
-          default:
-            imported = { graphData: { vertices: [], edges: [] } };
-        }
-        setGraphData(imported.graphData);
-      } catch (err) {
-        console.error("Failed to load graph data:", err);
-        setGraphData({ vertices: [], edges: [] });
-      }
-    }
-
-    loadGraph();
-  }, [floor]);
+  const graphData = useGraphData(floor);
 
   return (
     <g id="Edges">

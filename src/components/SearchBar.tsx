@@ -1,17 +1,18 @@
 import Tooltip from "components/ui/Tooltip";
 import {
   navigateToObject,
-  navigateWithDelay as navigationTestAll,
+  resetEdges,
 } from "utils/navigationHelper";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FiCircle, FiNavigation } from "react-icons/fi";
-import { useOnClickOutside } from "usehooks-ts";
 import { MapDataContext, NavigationContext } from "pages/Map";
 import {
   MapDataContextType,
   NavigationContextType,
   ObjectItem,
 } from "utils/types";
+import { useNavigate } from "react-router-dom";
+import { defaultPositionsByFloor } from "utils/floorDefaults";
 
 function SearchBar() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -22,24 +23,14 @@ function SearchBar() {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const suggestionsRef = useRef<HTMLUListElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { navigation, setNavigation } = useContext(
-    NavigationContext
-  ) as NavigationContextType;
-  const { setIsEditMode } = useContext(
+  const navigate = useNavigate();
+  const { navigation, setNavigation, setIsEditMode } = useContext(
     NavigationContext
   ) as NavigationContextType;
 
   useEffect(() => {
     setSuggestions(objects);
   }, [objects]);
-
-  useOnClickOutside(suggestionsRef, () => {
-    setIsAutocomplete(false);
-    setIsEditMode(false);
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
-  });
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
@@ -72,13 +63,7 @@ function SearchBar() {
       } else if (event.key === "Enter" && selectedIndex >= 0) {
         handleSuggestionClick(suggestions[selectedIndex]);
         event.preventDefault();
-        console.log(suggestions[selectedIndex].categoryName);
-
-        navigateToObject(
-          suggestions[selectedIndex].name,
-          navigation,
-          setNavigation
-        );
+        handleSearch(suggestions[selectedIndex].name);
       }
     }
   }
@@ -95,13 +80,12 @@ function SearchBar() {
   }, [selectedIndex]);
 
   function handleSuggestionClick(selectedObject: ObjectItem) {
-    console.log(selectedObject);
     setInputValue(selectedObject.name);
     setIsAutocomplete(false);
   }
+
   function handleInputFocus(event: React.FocusEvent<HTMLInputElement>) {
     setIsEditMode(false);
-
     if (inputValue.length > 1) {
       setIsAutocomplete(true);
     }
@@ -113,22 +97,44 @@ function SearchBar() {
     setSelectedIndex(-1);
   }
 
-  function handleSearch(inputValue: string) {
+  function handleSearch(input: string) {
     const matchingObject = objects.find(
-      (obj) => obj.name.toLowerCase() === inputValue.trim().toLowerCase()
+      (obj) => obj.name.toLowerCase() === input.trim().toLowerCase()
     );
+
     if (!matchingObject) {
-      if (inputValue === "Test") {
-        const delay = 500;
-        navigationTestAll(objects, 0, delay, navigation, setNavigation);
+      if (input === "Test") {
         return;
       } else {
         setIsInputInvalid(true);
         return;
       }
     }
-    navigateToObject(matchingObject.name, navigation, setNavigation);
-    setSelectedIndex(-1);
+
+    const match = matchingObject.name.match(/\d+/);
+    const targetFloor = match ? parseInt(match[0]) : 0;
+    const newStart = defaultPositionsByFloor[targetFloor];
+
+    if (navigation.floor === targetFloor) {
+      resetEdges(targetFloor);
+      navigateToObject(matchingObject.name, navigation, setNavigation, targetFloor);
+      return;
+    }
+
+    resetEdges(navigation.floor);
+
+    setNavigation({
+      floor: targetFloor,
+      start: newStart,
+      end: "",
+    });
+
+    sessionStorage.setItem(
+      "pendingNavigation",
+      JSON.stringify({ objectName: matchingObject.name, floor: targetFloor })
+    );
+
+    navigate(`/${targetFloor}?position=${newStart}`);
   }
 
   return (
