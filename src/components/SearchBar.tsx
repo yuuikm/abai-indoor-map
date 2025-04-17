@@ -147,7 +147,7 @@ function SearchBar() {
         </div>
         <div className="flex w-full relative">
           <input
-            className={`h-12 p-4 w-full flex-none text-gray-900 text-sm md:text-md ${
+            className={`h-12 p-4 w-full flex-none text-gray-900 text-sm md:text-md bg-white ${
               isInputInvalid && "input-error"
             } `}
             placeholder="Search"
@@ -185,7 +185,7 @@ function SearchBar() {
                   className="p-2 text-gray-500 text-sm md:text-md"
                   key={"no-result"}
                 >
-                  No results found
+                  Ничег
                 </li>
               )}
             </ul>

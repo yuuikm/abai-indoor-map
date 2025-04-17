@@ -92,18 +92,8 @@ function Sidebar() {
           <div className="rounded-md w-16 h-16 p-4 bg-gray-100 center">
             <img
               src={logo}
-              alt="PathPal"
+              alt="AbaiMap"
             />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex flex-col">
-              <p className="text-2xl font-semibold text-gray-900 pl-2">
-                PathPal
-              </p>
-              <p className="text-sm font-semibold text-[#225EA9] pl-2">
-                Indoor-Navigation
-              </p>
-            </div>
           </div>
         </div>
       </header>
