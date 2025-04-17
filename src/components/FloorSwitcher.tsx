@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { NavigationContext } from "pages/Map";
 import { NavigationContextType } from "utils/types";
 import { resetEdges } from "utils/navigationHelper";
+import { defaultPositionsByFloor } from "utils/floorDefaults";
 
 function FloorSwitcher() {
   const navigate = useNavigate();
@@ -10,15 +11,6 @@ function FloorSwitcher() {
   const { navigation, setNavigation } = useContext(
     NavigationContext
   ) as NavigationContextType;
-
-  const defaultPositionsByFloor: Record<number, string> = {
-    1: "v35",
-    2: "v19",
-    3: "v20",
-    4: "v21",
-    5: "v22",
-    6: "v23",
-  };
 
   const handleFloorChange = (newFloor: number) => {
     const defaultStart = defaultPositionsByFloor[newFloor];
@@ -34,7 +26,7 @@ function FloorSwitcher() {
     navigate(`/${newFloor}?position=${defaultStart}`);
   };
 
-  const floors = [1, 2, 3, 4, 5, 6];
+  const floors = [0, 1, 2, 3, 4, 5];
 
   return (
     <div className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg">

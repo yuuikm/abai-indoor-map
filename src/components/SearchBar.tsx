@@ -12,15 +12,7 @@ import {
   ObjectItem,
 } from "utils/types";
 import { useNavigate } from "react-router-dom";
-
-const defaultPositionsByFloor: Record<number, string> = {
-  1: "v35",
-  2: "v19",
-  3: "v20",
-  4: "v21",
-  5: "v22",
-  6: "v23",
-};
+import { defaultPositionsByFloor } from "utils/floorDefaults";
 
 function SearchBar() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -119,8 +111,8 @@ function SearchBar() {
       }
     }
 
-    const match = matchingObject.name.match(/(\d+)/);
-    const targetFloor = match ? parseInt(match[1]) : 1;
+    const match = matchingObject.name.match(/\d+/);
+    const targetFloor = match ? parseInt(match[0]) : 0;
     const newStart = defaultPositionsByFloor[targetFloor];
 
     if (navigation.floor === targetFloor) {

@@ -10,6 +10,7 @@ import { MapDataContext, NavigationContext } from "pages/Map";
 import { navigateToObject, resetEdges } from "utils/navigationHelper";
 import useGraphData from "utils/useGraphData";
 import { useNavigate } from "react-router-dom";
+import {defaultPositionsByFloor} from "utils/floorDefaults.ts";
 
 interface ParsedObjects {
   [key: string]: {
@@ -52,17 +53,8 @@ function Sidebar() {
     setIsEditMode(false);
     if (!object) return;
 
-    const match = object.name.match(/(\d+)/);
-    const targetFloor = match ? parseInt(match[1]) : 1;
-
-    const defaultPositionsByFloor: Record<number, string> = {
-      1: "v35",
-      2: "v19",
-      3: "v20",
-      4: "v21",
-      5: "v22",
-      6: "v23",
-    };
+    const floorMatch = object.categoryId?.match(/\d+/);
+    const targetFloor = floorMatch ? parseInt(floorMatch[0]) : 0;
 
     const newStart = defaultPositionsByFloor[targetFloor];
 
@@ -89,7 +81,9 @@ function Sidebar() {
     );
 
     navigate(`/${targetFloor}?position=${newStart}`);
+
   }
+
 
   return (
     <aside className="flex flex-col rounded-none w-[35rem] h-screen p-3 bg-white shadow-xl shadow-gray-200 -translate-x-full transform transition-transform duration-150 ease-in lg:translate-x-0 lg:shadow-md ">

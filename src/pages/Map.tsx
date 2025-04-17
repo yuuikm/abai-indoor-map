@@ -11,25 +11,18 @@ import {
   Navigation,
   NavigationContextType,
 } from "utils/types";
+import { defaultPositionsByFloor } from "utils/floorDefaults";
+import useGraphData from "utils/useGraphData";
 
 export const NavigationContext = createContext<NavigationContextType | null>(null);
 export const MapDataContext = createContext<MapDataContextType | null>(null);
-
-const defaultPositionsByFloor: Record<number, string> = {
-  1: "v35",
-  2: "v19",
-  3: "v20",
-  4: "v21",
-  5: "v22",
-  6: "v23",
-};
 
 function Map() {
   const navigate = useNavigate();
   const { floorNumber } = useParams<{ floorNumber: string }>();
   const [searchParams] = useSearchParams();
 
-  const floor = Number(floorNumber) || 1;
+  const floor = Number(floorNumber) || 0;
 
   const [navigation, setNavigation] = useState<Navigation>({
     start: "",
@@ -47,40 +40,39 @@ function Map() {
   };
 
   const mapData = useMapData();
+  const graphData = useGraphData(floor);
 
   useEffect(() => {
     const positionParam = searchParams.get("position");
     const defaultStart = defaultPositionsByFloor[floor];
-
     const start = positionParam || defaultStart;
 
-    setNavigation({
-      start,
-      end: "",
-      floor,
-    });
+    setNavigation({ start, end: "", floor });
 
     if (floorNumber !== String(floor) || positionParam !== start) {
       navigate(`/${floor}?position=${start}`, { replace: true });
     }
 
     const pending = sessionStorage.getItem("pendingNavigation");
+
     if (pending) {
       const { objectName } = JSON.parse(pending);
-      sessionStorage.removeItem("pendingNavigation");
 
-      setTimeout(() => {
-        import("utils/navigationHelper").then(({ navigateToObject }) => {
-          navigateToObject(
-            objectName,
-            { start, end: "", floor },
-            setNavigation,
-            floor
-          );
-        });
-      }, 200);
+      const tryNavigate = () => {
+        if (graphData.vertices.length > 0) {
+          sessionStorage.removeItem("pendingNavigation");
+
+          import("utils/navigationHelper").then(({ navigateToObject }) => {
+            navigateToObject(objectName, { start, end: "", floor }, setNavigation, floor);
+          });
+        } else {
+          setTimeout(tryNavigate, 100);
+        }
+      };
+
+      tryNavigate();
     }
-  }, [floor]);
+  }, [floor, graphData]);
 
   return (
     <MapDataContext.Provider value={mapData}>
