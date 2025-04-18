@@ -1,4 +1,4 @@
-import logo from "assets/img/pathpal-logo.svg";
+import logo from "assets/img/abai-logo.svg";
 import { FiChevronRight } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -89,12 +89,10 @@ function Sidebar() {
     <aside className="flex flex-col rounded-none w-[35rem] h-screen p-3 bg-white shadow-xl shadow-gray-200 -translate-x-full transform transition-transform duration-150 ease-in lg:translate-x-0 lg:shadow-md ">
       <header className="flex flex-col mb-4 pr-1 border-b py-2 w-full">
         <div className="flex items-center flex-none mr-10">
-          <div className="rounded-md w-16 h-16 p-4 bg-gray-100 center">
             <img
               src={logo}
               alt="AbaiMap"
             />
-          </div>
         </div>
       </header>
       <div className="overflow-auto h-full">
@@ -107,7 +105,7 @@ function Sidebar() {
                   {letter}
                   <span className="ml-2 text-sm font-medium text-gray-900">
                     - {parsedObjects[letter].len} {" "}
-                    {parsedObjects[letter].len === 1 ? "Result" : "Results"}
+                    {parsedObjects[letter].len === 1 ? "Арендатор" : "Арендаторов"}
                   </span>
                 </h2>
               </header>
