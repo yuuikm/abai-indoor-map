@@ -6,12 +6,12 @@ import { useContext } from "react";
 import { resetEdges } from "utils/navigationHelper";
 
 function EditPositionButton() {
-  const { isEditMode, setIsEditMode, setNavigation } = useContext(
+  const { navigation, isEditMode, setIsEditMode, setNavigation } = useContext(
     NavigationContext
   ) as NavigationContextType;
   function handleEdit() {
     setIsEditMode(!isEditMode);
-    resetEdges();
+    resetEdges(navigation.floor);
     setNavigation((prevNavigation) => ({
       ...prevNavigation,
       end: "",
