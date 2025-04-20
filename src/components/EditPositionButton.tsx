@@ -6,19 +6,19 @@ import { useContext } from "react";
 import { resetEdges } from "utils/navigationHelper";
 
 function EditPositionButton() {
-  const { isEditMode, setIsEditMode, setNavigation } = useContext(
+  const { navigation, isEditMode, setIsEditMode, setNavigation } = useContext(
     NavigationContext
   ) as NavigationContextType;
   function handleEdit() {
     setIsEditMode(!isEditMode);
-    resetEdges();
+    resetEdges(navigation.floor);
     setNavigation((prevNavigation) => ({
       ...prevNavigation,
       end: "",
     }));
   }
   return (
-    <Tooltip content="Change Position" className="bg-green-500">
+    <Tooltip content="Поменять местоположение" className="bg-green-500">
       <button
         data-tooltip-target="tooltip-default"
         className="ml-1 h-12 w-12 bg-green-500 center rounded text-white"
