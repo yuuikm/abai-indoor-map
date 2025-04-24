@@ -1,102 +1,180 @@
 {
   "objects": [
     {
-      "id": "101",
-      "categoryId": "f1",
-      "name": "Zara 1",
-      "desc": ""
-    },
-    {
-      "id": "102",
-      "categoryId": "f1",
-      "name": "Adidas 1",
-      "desc": ""
-    },
-    {
-      "id": "201",
-      "categoryId": "f2",
-      "name": "Zara 2",
-      "desc": ""
-    },
-    {
-      "id": "202",
-      "categoryId": "f2",
-      "name": "Adidas 2",
-      "desc": ""
-    },
-    {
-      "id": "301",
-      "categoryId": "f3",
-      "name": "Zara 3",
-      "desc": ""
-    },
-    {
-      "id": "302",
-      "categoryId": "f3",
-      "name": "Adidas 3",
-      "desc": ""
-    },
-    {
-      "id": "401",
-      "categoryId": "f4",
-      "name": "Zara 4",
-      "desc": ""
-    },
-    {
-      "id": "402",
-      "categoryId": "f4",
-      "name": "Adidas 4",
-      "desc": ""
-    },
-    {
-      "id": "501",
-      "categoryId": "f5",
-      "name": "Zara 5",
-      "desc": ""
-    },
-    {
-      "id": "502",
-      "categoryId": "f5",
-      "name": "Adidas 5",
-      "desc": ""
-    },
-    {
       "id": "001",
       "categoryId": "f0",
-      "name": "Zara 0",
-      "desc": ""
+      "name": "Арендатор 001",
+      "desc": "Арендатор 001"
     },
     {
       "id": "002",
       "categoryId": "f0",
-      "name": "Adidas 0",
-      "desc": ""
+      "name": "Арендатор 002",
+      "desc": "Арендатор 002"
+    },
+    {
+      "id": "003",
+      "categoryId": "f0",
+      "name": "Техническое помещение",
+      "desc": "Техническое помещение"
+    },
+    {
+      "id": "004",
+      "categoryId": "f0",
+      "name": "Арендатор 004",
+      "desc": "Арендатор 004"
+    },
+    {
+      "id": "005",
+      "categoryId": "f0",
+      "name": "Арендатор 005",
+      "desc": "Арендатор 005"
+    },
+    {
+      "id": "006",
+      "categoryId": "f0",
+      "name": "Арендатор 006",
+      "desc": "Арендатор 006"
+    },
+    {
+      "id": "007",
+      "categoryId": "f0",
+      "name": "Арендатор 007",
+      "desc": "Арендатор 007"
+    },
+    {
+      "id": "008",
+      "categoryId": "f0",
+      "name": "Арендатор 008",
+      "desc": "Арендатор 008"
+    },
+    {
+      "id": "009",
+      "categoryId": "f0",
+      "name": "Арендатор 009",
+      "desc": "Арендатор 009"
+    },
+    {
+      "id": "010",
+      "categoryId": "f0",
+      "name": "Арендатор 010",
+      "desc": "Арендатор 010"
+    },
+    {
+      "id": "011",
+      "categoryId": "f0",
+      "name": "Арендатор 011",
+      "desc": "Арендатор 011"
+    },
+    {
+      "id": "012",
+      "categoryId": "f0",
+      "name": "Арендатор 012",
+      "desc": "Арендатор 012"
+    },
+    {
+      "id": "013",
+      "categoryId": "f0",
+      "name": "Арендатор 013",
+      "desc": "Арендатор 013"
+    },
+    {
+      "id": "014",
+      "categoryId": "f0",
+      "name": "Арендатор 014",
+      "desc": "Арендатор 014"
+    },
+    {
+      "id": "015",
+      "categoryId": "f0",
+      "name": "Арендатор 015",
+      "desc": "Арендатор 015"
+    },
+    {
+      "id": "016",
+      "categoryId": "f0",
+      "name": "Арендатор 016",
+      "desc": "Арендатор 016"
+    },
+    {
+      "id": "017",
+      "categoryId": "f0",
+      "name": "Арендатор 017",
+      "desc": "Арендатор 017"
+    },
+    {
+      "id": "018",
+      "categoryId": "f0",
+      "name": "Арендатор 018",
+      "desc": "Арендатор 018"
+    },
+    {
+      "id": "019",
+      "categoryId": "f0",
+      "name": "Лифт цоколь",
+      "desc": "Лифт цоколь"
+    },
+    {
+      "id": "020",
+      "categoryId": "f0",
+      "name": "Арендатор 020",
+      "desc": "Арендатор 020"
+    },
+    {
+      "id": "021",
+      "categoryId": "f0",
+      "name": "Арендатор open-space-2/2",
+      "desc": "Арендатор open-space-2/2"
+    },
+    {
+      "id": "022",
+      "categoryId": "f0",
+      "name": "Арендатор open-space-2/1",
+      "desc": "Арендатор open-space-2/1"
+    },
+    {
+      "id": "023",
+      "categoryId": "f0",
+      "name": "Арендатор open-space-1",
+      "desc": "Арендатор open-space-1"
+    },
+    {
+      "id": "024",
+      "categoryId": "f0",
+      "name": "Туалет №1 цоколь",
+      "desc": "Туалет №1 цоколь"
+    },
+    {
+      "id": "025",
+      "categoryId": "f0",
+      "name": "Туалет №2 цоколь",
+      "desc": "Туалет №2 цоколь"
     }
   ],
   "categories": [
     {
       "id": "f1",
-      "name": "Retail"
+      "name": "1 этаж"
     },
     {
       "id": "f2",
-      "name": "Food"
+      "name": "2 этаж"
     },
     {
       "id": "f3",
-      "name": "Services"
+      "name": "3 этаж"
     },
     {
       "id": "f4",
-      "name": "Health & Beauty"
+      "name": "4 этаж"
     },
     {
       "id": "f5",
-      "name": "Luxury Goods"
+      "name": "5 этаж"
     },
     {
       "id": "f0",
-      "name": "Electronics"
+      "name": "0 этаж"
     }
   ]
 }
