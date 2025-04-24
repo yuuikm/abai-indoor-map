@@ -1,8 +1,8 @@
 export const defaultPositionsByFloor: Record<number, string> = {
-  0: "v10",
-  1: "v19",
-  2: "v20",
-  3: "v21",
-  4: "v22",
-  5: "v23",
+  0: "v42",
+  1: "v12",
+  2: "v7",
+  3: "v9",
+  4: "v7",
+  5: "v6",
 };
