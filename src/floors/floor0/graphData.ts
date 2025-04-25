@@ -85,7 +85,7 @@ export const graphData: GraphData = {
     { id: "v34_to_v33", from: "v34", to: "v33" },
     { id: "v33_to_v12", from: "v33", to: "v12" },
     { id: "v33_to_v32", from: "v33", to: "v32" },
-    { id: "v32_to_v13", from: "v13", to: "v14" },
+    { id: "v32_to_v13", from: "v32", to: "v13" },
     { id: "v32_to_v14", from: "v32", to: "v14" },
     { id: "v32_to_v31", from: "v32", to: "v31" },
     { id: "v31_to_v15", from: "v31", to: "v15" },
