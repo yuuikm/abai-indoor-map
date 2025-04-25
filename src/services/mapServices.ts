@@ -1,43 +1,40 @@
-import db from "assets/db.json";
 import { Beacon, Category, ObjectItem } from "utils/types";
 import apiService from "./apiService";
+
 export async function getObjects(): Promise<ObjectItem[]> {
   try {
-    const response = await apiService.get("/objects");
-    return response.data as ObjectItem[];
+    const response = await apiService.get("");
+    return response.data.objects as ObjectItem[];
   } catch (error) {
-    console.error(
-      "Error fetching objects from API, falling back to local db.json:",
-      error
-    );
-    return db.objects as ObjectItem[];
+    console.error("Error fetching objects from API.", error);
+    throw error;
   }
 }
 
 export async function getObjectById(id: string): Promise<ObjectItem> {
   try {
-    const response = await apiService.get(`/objects/${id}`);
-    return response.data[0] as ObjectItem;
+    const response = await apiService.get("");
+    const objects = response.data.objects as ObjectItem[];
+    const object = objects.find((obj) => obj.id === id);
+
+    if (!object) {
+      throw new Error(`Object with ID ${id} not found in remote db.json`);
+    }
+
+    return object;
   } catch (error) {
     console.error(`Error fetching object with ID ${id}:`, error);
-    const object = db.objects.find((obj) => obj.id === id);
-    if (!object) {
-      throw new Error(`Object with ID ${id} not found in local db.json`);
-    }
-    return object;
+    throw error;
   }
 }
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const response = await apiService.get("/categories");
-    return response.data as Category[];
+    const response = await apiService.get("");
+    return response.data.categories as Category[];
   } catch (error) {
-    console.error(
-      "Error fetching categories from API, falling back to local db.json:",
-      error
-    );
-    return db.categories as Category[];
+    console.error("Error fetching categories from API:", error);
+    throw error;
   }
 }
 
@@ -90,8 +87,8 @@ export async function updateCategory(
 
 export async function getBeacon(): Promise<Beacon[]> {
   try {
-    const response = await apiService.get("/fingerprints");
-    return response.data as Beacon[];
+    const response = await apiService.get("");
+    return response.data.fingerprints as Beacon[];
   } catch (error) {
     console.error("Error fetching beacons:", error);
     throw error;
