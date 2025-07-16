@@ -10,8 +10,8 @@ function MapBackground({ children, floor }: MapBackgroundProps) {
 
   return (
     <svg
-      viewBox="0.469 0.006 1461.95 1149.136"
-      // viewBox="0.469 750 1461.95 1149.136"
+      // viewBox="0.469 0.006 1461.95 1149.136"
+      viewBox="0.469 750 1461.95 1149.136"
       className="lg:h-[85vh] lg:w-[75vw] h-[85dvh]"
     >
       <image id="background" width="100%" height="100%" href={mapPath} />
