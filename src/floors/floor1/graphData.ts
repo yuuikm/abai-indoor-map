@@ -29,7 +29,7 @@ export const graphData: GraphData = {
     { id: "v11", objectName: "Ресепшн", cx: 790.18, cy: 610.48 },
     { id: "v12", objectName: null, cx: 848.02, cy: 592.99 },
     { id: "v13", objectName: null, cx: 848.02, cy: 629.99 },
-    { id: "v14", objectName: "Кофетерий", cx: 887.53, cy: 629.99 },
+    { id: "v14", objectName: "URBO COFFEE", cx: 887.53, cy: 629.99 },
     { id: "v15", objectName: null, cx: 925.64, cy: 592.99 },
     { id: "v16", objectName: "Арендатор 101", cx: 925.64, cy: 576.09 },
     { id: "v17", objectName: null, cx: 1002.7, cy: 592.99 },
