@@ -6,11 +6,11 @@ const floor5Objects: FloorObject[] = [
     d: "M17.38 576.09h80.45v-83.13H17.38v83.13z"
   },
   {
-    id: "Арендатор open-space-11",
+    id: "IS Holding ТОО №525",
     d: "M97.83 576.09h76.15v-83.13H97.83v83.13z"
   },
   {
-    id: "Арендатор open-space-12",
+    id: "IS Holding ТОО №523",
     d: "M173.98 576.09h76.16v-83.13h-76.16v83.13z"
   },
   {
@@ -18,7 +18,7 @@ const floor5Objects: FloorObject[] = [
     d: "M250.14 576.09h155.93v-83.13H250.14v83.13z"
   },
   {
-    id: "Арендатор open-space-14",
+    id: "Арман Арыстан ИП",
     d: "M406.07 576.09h156.65v-83.13H406.07v83.13z"
   },
   {
@@ -62,7 +62,7 @@ const floor5Objects: FloorObject[] = [
     d: "M92.77 693.61h158.79v-83.13H92.77v83.13z"
   },
   {
-    id: "Арендатор _x30_09",
+    id: "Bolashaq ИП",
     d: "M1132.71 576.09h234.27v-83.13h-234.27v83.13z"
   },
   {
